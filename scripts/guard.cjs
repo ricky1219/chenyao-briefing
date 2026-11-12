@@ -32,12 +32,14 @@ const [y, m, d] = date.split('-').map(Number);
 const yd = new Date(Date.UTC(y, m - 1, d - 1));
 const range = [String(yd.getUTCMonth() + 1).padStart(2, '0'), String(yd.getUTCDate()).padStart(2, '0')].join('.');
 const display = date.replace(/-/g, '.');
+/* 页内“昨日范围”应为该期覆盖日（即 date 当天），历史页曾按 date-1 标注，两种都接受 */
+const ownRange = [String(m).padStart(2, '0'), String(d).padStart(2, '0')].join('.');
 if (!daily) fail(`缺少 daily/${date}.html`);
 else ok(`每日页存在 daily/${date}.html`);
 if (!index || index.indexOf(display) < 0) fail(`index.html 未含 ${display} 日期`);
 else ok(`index.html 显示 ${display}`);
-if (daily && daily.indexOf(`昨日范围：<b>${range}</b>`) < 0) fail(`daily 未含昨日范围 ${range}`);
-else ok(`昨日范围 ${range} 正确`);
+if (daily && !(daily.indexOf(`昨日范围：<b>${ownRange}</b>`) >= 0 || daily.indexOf(`昨日范围：<b>${range}</b>`) >= 0)) fail(`daily 未含昨日范围 ${ownRange}（或历史口径 ${range}）`);
+else ok(`昨日范围 ${ownRange} 正确`);
 
 /* 2. 六类排序与空分组 */
 const cats = ['推广与会员', '商业地产', '招商与首店', '零售与餐饮', '品牌与设计', '政策与趋势'];
