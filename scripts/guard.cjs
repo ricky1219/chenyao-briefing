@@ -74,7 +74,7 @@ if (daily && checkLinks) {
   let bad = 0;
   for (const l of links.slice(0, 10)) {
     try {
-      execFileSync('curl', ['-fsSL', '-o', '/dev/null', '--max-time', '12', l], { stdio: 'ignore' });
+      execFileSync('curl', ['-fsSL', '-o', '/dev/null', '--max-time', '12', '-A', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120 Safari/537.36', l], { stdio: 'ignore' });
     } catch (e) { bad++; fail(`来源打不开：${l.slice(0, 80)}`); if (bad > 5) break; }
   }
   if (!bad) ok(`抽查 ${Math.min(10, links.length)} 个来源链接均可打开`);
